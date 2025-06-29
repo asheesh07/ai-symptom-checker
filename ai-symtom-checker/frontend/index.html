@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Symptom Checker - Advanced Medical Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'medical-blue': '#1e40af',
+                        'medical-green': '#059669',
+                        'medical-yellow': '#d97706',
+                        'medical-red': '#dc2626',
+                        'medical-emergency': '#991b1b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chat-container {
+            height: calc(100vh - 200px);
+        }
+        .typing-indicator {
+            display: none;
+        }
+        .typing-indicator.show {
+            display: flex;
+        }
+        .confidence-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        .condition-card {
+            transition: all 0.3s ease;
+        }
+        .condition-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .urgency-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-medical-blue rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">AI Symptom Checker</h1>
+                        <p class="text-sm text-gray-500">Advanced Medical Analysis</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-500">
+                        <span id="status-indicator" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-1"></span>
+                            Connected
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Chat Interface -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-sm border">
+                    <!-- Chat Header -->
+                    <div class="px-6 py-4 border-b bg-gray-50 rounded-t-lg">
+                        <h2 class="text-lg font-semibold text-gray-900">Symptom Analysis</h2>
+                        <p class="text-sm text-gray-600">Describe your symptoms and get AI-powered medical insights</p>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div id="chat-messages" class="chat-container overflow-y-auto p-6 space-y-4">
+                        <!-- Welcome Message -->
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-medical-blue rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="bg-blue-50 rounded-lg p-4 max-w-3xl">
+                                <p class="text-gray-800">
+                                    Hello! I'm your AI medical assistant. Please describe your symptoms in detail, including:
+                                </p>
+                                <ul class="mt-2 text-sm text-gray-700 space-y-1">
+                                    <li>• What symptoms you're experiencing</li>
+                                    <li>• How long you've had them</li>
+                                    <li>• Any relevant medical history</li>
+                                    <li>• Your age and gender (optional)</li>
+                                </ul>
+                                <p class="mt-2 text-xs text-gray-600">
+                                    <strong>Note:</strong> This is for informational purposes only and should not replace professional medical advice.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Typing Indicator -->
+                    <div id="typing-indicator" class="typing-indicator px-6 py-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex space-x-1">
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                            </div>
+                            <span class="text-sm text-gray-500">Analyzing symptoms...</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Form -->
+                    <div class="px-6 py-4 border-t bg-gray-50 rounded-b-lg">
+                        <form id="symptom-form" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="age" class="block text-sm font-medium text-gray-700">Age (optional)</label>
+                                    <input type="number" id="age" name="age" min="0" max="120" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-medical-blue focus:ring-medical-blue sm:text-sm">
+                                </div>
+                                <div>
+                                    <label for="gender" class="block text-sm font-medium text-gray-700">Gender (optional)</label>
+                                    <select id="gender" name="gender" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-medical-blue focus:ring-medical-blue sm:text-sm">
+                                        <option value="">Select gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="medical-history" class="block text-sm font-medium text-gray-700">Medical History (optional)</label>
+                                    <input type="text" id="medical-history" name="medical_history" placeholder="e.g., diabetes, heart disease" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-medical-blue focus:ring-medical-blue sm:text-sm">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="symptoms" class="block text-sm font-medium text-gray-700">Describe your symptoms *</label>
+                                <textarea id="symptoms" name="symptoms" rows="3" required placeholder="Describe your symptoms in detail..." class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-medical-blue focus:ring-medical-blue sm:text-sm"></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" id="submit-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-medical-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-medical-blue disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Analyze Symptoms
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Results Panel -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm border">
+                    <div class="px-6 py-4 border-b bg-gray-50 rounded-t-lg">
+                        <h3 class="text-lg font-semibold text-gray-900">Analysis Results</h3>
+                        <p class="text-sm text-gray-600">AI-powered medical insights</p>
+                    </div>
+                    <div id="results-panel" class="p-6">
+                        <div class="text-center text-gray-500">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p class="mt-2 text-sm">No analysis yet</p>
+                            <p class="text-xs">Enter your symptoms to get started</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        let isAnalyzing = false;
+        let currentAnalysis = null;
+        let followUpAnswers = {};
+
+        // Utility functions
+        function getUrgencyColor(urgency) {
+            const colors = {
+                'low': 'bg-green-100 text-green-800 border-green-200',
+                'medium': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                'high': 'bg-orange-100 text-orange-800 border-orange-200',
+                'emergency': 'bg-red-100 text-red-800 border-red-200 urgency-badge'
+            };
+            return colors[urgency] || colors.low;
+        }
+
+        function getConfidenceColor(confidence) {
+            const colors = {
+                'low': 'bg-red-500',
+                'medium': 'bg-yellow-500',
+                'high': 'bg-green-500'
+            };
+            return colors[confidence] || colors.medium;
+        }
+
+        function formatConfidenceScore(score) {
+            return Math.round(score * 100);
+        }
+
+        function addMessage(content, isUser = false) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex items-start space-x-3 ${isUser ? 'justify-end' : ''}`;
+            
+            const icon = isUser ? 
+                '<div class="w-8 h-8 bg-medical-blue rounded-full flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div>' :
+                '<div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>';
+            
+            const bgColor = isUser ? 'bg-medical-blue text-white' : 'bg-gray-100 text-gray-800';
+            
+            messageDiv.innerHTML = `
+                ${isUser ? '' : icon}
+                <div class="${bgColor} rounded-lg p-4 max-w-3xl">
+                    ${content}
+                </div>
+                ${isUser ? icon : ''}
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typing-indicator').classList.add('show');
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typing-indicator').classList.remove('show');
+        }
+
+        function updateResultsPanel(response) {
+            const resultsPanel = document.getElementById('results-panel');
+            
+            const urgencyColor = getUrgencyColor(response.urgency);
+            const confidencePercent = formatConfidenceScore(response.confidence_score);
+            
+            let conditionsHtml = '';
+            response.conditions.forEach(condition => {
+                const conditionUrgencyColor = getUrgencyColor(condition.urgency);
+                const confidenceColor = getConfidenceColor(condition.confidence);
+                
+                conditionsHtml += `
+                    <div class="condition-card bg-white border rounded-lg p-4 mb-3 hover:shadow-md">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-gray-900">${condition.name}</h4>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${conditionUrgencyColor}">
+                                ${condition.urgency}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2">${condition.description}</p>
+                        <p class="text-xs text-gray-500 mb-3"><strong>Reasoning:</strong> ${condition.reasoning}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">Confidence: ${condition.confidence}</span>
+                            <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full ${confidenceColor} rounded-full" style="width: ${condition.confidence === 'high' ? '100%' : condition.confidence === 'medium' ? '66%' : '33%'}"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            let redFlagsHtml = '';
+            if (response.red_flags && response.red_flags.length > 0) {
+                redFlagsHtml = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                        <h4 class="font-semibold text-red-800 mb-2">⚠️ Red Flags Detected</h4>
+                        <ul class="text-sm text-red-700 space-y-1">
+                            ${response.red_flags.map(flag => `<li>• ${flag}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            resultsPanel.innerHTML = `
+                <div class="space-y-4">
+                    <!-- Overall Urgency -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-semibold text-gray-900">Overall Urgency</h4>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${urgencyColor}">
+                                ${response.urgency.toUpperCase()}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Confidence Score</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-medical-blue rounded-full confidence-bar" style="width: ${confidencePercent}%"></div>
+                                </div>
+                                <span class="text-sm font-medium text-gray-900">${confidencePercent}%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Red Flags -->
+                    ${redFlagsHtml}
+
+                    <!-- Conditions -->
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Possible Conditions (${response.conditions.length})</h4>
+                        ${conditionsHtml}
+                    </div>
+
+                    <!-- Advice -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-blue-800 mb-2">Medical Advice</h4>
+                        <p class="text-sm text-blue-700">${response.advice}</p>
+                    </div>
+
+                    <!-- Follow-up Questions -->
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Follow-up Questions</h4>
+                        <div class="space-y-3">
+                            ${response.follow_ups.map((question, index) => `
+                                <div class="follow-up-question bg-gray-50 rounded-lg p-3 border-l-4 border-medical-blue">
+                                    <p class="text-sm text-gray-700 mb-2">${question}</p>
+                                    <div class="flex space-x-2">
+                                        <button onclick="answerFollowUp('${question}', 'yes', ${index})" 
+                                                class="px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors">
+                                            Yes
+                                        </button>
+                                        <button onclick="answerFollowUp('${question}', 'no', ${index})" 
+                                                class="px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors">
+                                            No
+                                        </button>
+                                        <button onclick="answerFollowUp('${question}', 'unsure', ${index})" 
+                                                class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
+                                            Unsure
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p class="text-sm text-blue-700">
+                                <strong>💡 Tip:</strong> Answering these questions will help provide a more accurate analysis. 
+                                You can also provide additional details in the chat below.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Disclaimer -->
+                    <div class="text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
+                        <p><strong>Disclaimer:</strong> ${response.disclaimer}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function answerFollowUp(question, answer, index) {
+            // Store the answer
+            followUpAnswers[question] = answer;
+            
+            // Update the UI to show the answer
+            const questionElement = document.querySelectorAll('.follow-up-question')[index];
+            const buttons = questionElement.querySelectorAll('button');
+            
+            // Disable all buttons and highlight the selected one
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('bg-green-100', 'bg-red-100', 'bg-gray-100', 'text-green-700', 'text-red-700', 'text-gray-700');
+                btn.classList.add('bg-gray-200', 'text-gray-500');
+            });
+            
+            // Highlight the selected answer
+            const selectedButton = questionElement.querySelector(`button[onclick*="'${answer}'"]`);
+            if (selectedButton) {
+                selectedButton.classList.remove('bg-gray-200', 'text-gray-500');
+                if (answer === 'yes') {
+                    selectedButton.classList.add('bg-green-100', 'text-green-700');
+                } else if (answer === 'no') {
+                    selectedButton.classList.add('bg-red-100', 'text-red-700');
+                } else {
+                    selectedButton.classList.add('bg-gray-100', 'text-gray-700');
+                }
+            }
+            
+            // Add a checkmark
+            const checkmark = document.createElement('span');
+            checkmark.innerHTML = ' ✓';
+            checkmark.className = 'text-green-600 font-bold';
+            selectedButton.appendChild(checkmark);
+            
+            // Check if we have enough answers to trigger enhanced analysis
+            setTimeout(() => {
+                if (Object.keys(followUpAnswers).length >= Math.ceil(response.follow_ups.length / 2)) {
+                    suggestEnhancedAnalysis();
+                }
+            }, 500);
+        }
+
+        function suggestEnhancedAnalysis() {
+            const enhancedAnalysisDiv = document.createElement('div');
+            enhancedAnalysisDiv.className = 'mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg';
+            enhancedAnalysisDiv.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h5 class="font-semibold text-blue-800 mb-1">🎯 Enhanced Analysis Available</h5>
+                        <p class="text-sm text-blue-700">You've answered several follow-up questions. Would you like a more detailed analysis?</p>
+                    </div>
+                    <button onclick="performEnhancedAnalysis()" 
+                            class="px-4 py-2 bg-medical-blue text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                        Get Enhanced Analysis
+                    </button>
+                </div>
+            `;
+            
+            const resultsPanel = document.getElementById('results-panel');
+            resultsPanel.appendChild(enhancedAnalysisDiv);
+        }
+
+        async function performEnhancedAnalysis() {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            
+            try {
+                // Prepare enhanced request with follow-up answers
+                const enhancedSymptoms = `${currentAnalysis.symptoms}\n\nFollow-up Answers:\n${Object.entries(followUpAnswers).map(([question, answer]) => `${question}: ${answer}`).join('\n')}`;
+                
+                const requestData = {
+                    symptoms: enhancedSymptoms,
+                    age: currentAnalysis.age,
+                    gender: currentAnalysis.gender,
+                    medical_history: currentAnalysis.medical_history,
+                    follow_up_answers: followUpAnswers
+                };
+
+                // Add system message
+                addMessage('🔄 Performing enhanced analysis with your follow-up answers...', false);
+                showTypingIndicator();
+
+                // Make enhanced API call
+                const response = await fetch(`${API_BASE}/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                hideTypingIndicator();
+
+                // Add enhanced response
+                const enhancedResponse = `
+                    <div class="space-y-3">
+                        <p><strong>🎯 Enhanced Analysis Complete</strong></p>
+                        <p>Based on your follow-up answers, I've refined the analysis:</p>
+                        <p><strong>Updated Urgency:</strong> <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getUrgencyColor(result.urgency)}">${result.urgency.toUpperCase()}</span></p>
+                        <p><strong>Confidence Score:</strong> <span class="font-semibold">${formatConfidenceScore(result.confidence_score)}%</span></p>
+                    </div>
+                `;
+                
+                addMessage(enhancedResponse, false);
+                updateResultsPanel(result);
+                
+                // Clear follow-up answers for next analysis
+                followUpAnswers = {};
+                
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage(`❌ Error during enhanced analysis: ${error.message}`, false);
+            } finally {
+                isAnalyzing = false;
+            }
+        }
+
+        async function analyzeSymptoms(formData) {
+            if (isAnalyzing) return;
+            
+            isAnalyzing = true;
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="animate-spin w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Analyzing...';
+
+            try {
+                // Add user message
+                addMessage(formData.get('symptoms'), true);
+                
+                // Show typing indicator
+                showTypingIndicator();
+
+                // Prepare request data
+                const requestData = {
+                    symptoms: formData.get('symptoms'),
+                    age: formData.get('age') ? parseInt(formData.get('age')) : null,
+                    gender: formData.get('gender') || null,
+                    medical_history: formData.get('medical_history') || null
+                };
+
+                // Make API call
+                const response = await fetch(`${API_BASE}/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                // Hide typing indicator
+                hideTypingIndicator();
+
+                // Add AI response
+                const aiResponse = `
+                    <div class="space-y-3">
+                        <p><strong>Analysis Complete</strong></p>
+                        <p>I've identified <strong>${result.conditions.length} possible conditions</strong> based on your symptoms.</p>
+                        <p><strong>Urgency Level:</strong> <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getUrgencyColor(result.urgency)}">${result.urgency.toUpperCase()}</span></p>
+                        ${result.red_flags && result.red_flags.length > 0 ? 
+                            `<p class="text-red-600"><strong>⚠️ Red Flags:</strong> ${result.red_flags.length} serious symptoms detected</p>` : ''}
+                        <p class="text-sm text-gray-600">${result.explanation}</p>
+                    </div>
+                `;
+                addMessage(aiResponse);
+
+                // Update results panel
+                updateResultsPanel(result);
+
+                // Store current analysis
+                currentAnalysis = {
+                    symptoms: formData.get('symptoms'),
+                    age: formData.get('age') ? parseInt(formData.get('age')) : null,
+                    gender: formData.get('gender') || null,
+                    medical_history: formData.get('medical_history') || null
+                };
+
+            } catch (error) {
+                console.error('Error:', error);
+                hideTypingIndicator();
+                addMessage(`
+                    <div class="text-red-600">
+                        <p><strong>Error:</strong> Unable to analyze symptoms at this time.</p>
+                        <p class="text-sm">Please try again later or contact support if the problem persists.</p>
+                    </div>
+                `);
+            } finally {
+                isAnalyzing = false;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Analyze Symptoms';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('symptom-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            await analyzeSymptoms(formData);
+        });
+
+        // Check API health on load
+        async function checkHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    document.getElementById('status-indicator').innerHTML = '<span class="w-2 h-2 bg-green-400 rounded-full mr-1"></span>Connected';
+                } else {
+                    document.getElementById('status-indicator').innerHTML = '<span class="w-2 h-2 bg-red-400 rounded-full mr-1"></span>Disconnected';
+                }
+            } catch (error) {
+                document.getElementById('status-indicator').innerHTML = '<span class="w-2 h-2 bg-red-400 rounded-full mr-1"></span>Disconnected';
+            }
+        }
+
+        // Initialize
+        checkHealth();
+        setInterval(checkHealth, 30000); // Check every 30 seconds
+    </script>
+</body>
+</html> 

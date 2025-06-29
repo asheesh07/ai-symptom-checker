@@ -1,0 +1,120 @@
+2025-06-29 12:38:18,446 - app.main - INFO - Starting AI Symptom Checker v1.0.0
+2025-06-29 12:38:18,446 - app.main - INFO - Environment: PRODUCTION
+2025-06-29 12:38:19,754 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 12:38:19,755 - app.main - INFO - Response: 200 - 0.001s
+2025-06-29 12:38:27,674 - app.main - INFO - Request: GET http://localhost:8000/api/v1/info
+2025-06-29 12:38:27,674 - app.main - INFO - Response: 200 - 0.001s
+2025-06-29 12:38:30,830 - app.main - INFO - Request: GET http://localhost:8000/docs
+2025-06-29 12:38:30,831 - app.main - INFO - Response: 200 - 0.001s
+2025-06-29 12:38:31,108 - app.main - INFO - Request: GET http://localhost:8000/openapi.json
+2025-06-29 12:38:31,113 - app.main - INFO - Response: 200 - 0.005s
+2025-06-29 12:38:32,989 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 12:38:32,990 - app.main - INFO - Response: 200 - 0.002s
+2025-06-29 12:40:21,226 - app.main - INFO - Request: OPTIONS http://localhost:8000/api/v1/analyze
+2025-06-29 12:40:21,231 - app.main - INFO - Response: 200 - 0.007s
+2025-06-29 12:40:21,233 - app.main - INFO - Request: POST http://localhost:8000/api/v1/analyze
+2025-06-29 12:40:21,241 - app.api.symptoms - INFO - Analyzing symptoms: "loss of smell, dry cough, fever, and body aches"...
+2025-06-29 12:40:21,241 - app.services.llm_service - INFO - Calling OpenAI API
+2025-06-29 12:40:21,242 - app.services.llm_service - WARNING - Attempt 1 failed: module 'openai' has no attribute 'error'. Retrying in 1.0s...
+2025-06-29 12:40:22,247 - app.services.llm_service - WARNING - Attempt 2 failed: module 'openai' has no attribute 'error'. Retrying in 1.0s...
+2025-06-29 12:40:24,252 - app.services.llm_service - ERROR - All 3 attempts failed. Last error: module 'openai' has no attribute 'error'
+2025-06-29 12:40:24,252 - app.services.llm_service - ERROR - Error analyzing symptoms: module 'openai' has no attribute 'error'
+2025-06-29 12:40:24,252 - app.api.symptoms - ERROR - Unexpected error: module 'openai' has no attribute 'error'
+2025-06-29 12:40:24,253 - app.main - INFO - Response: 500 - 3.020s
+2025-06-29 12:41:25,020 - app.main - INFO - Shutting down AI Symptom Checker
+2025-06-29 12:41:25,647 - app.main - INFO - Starting AI Symptom Checker v1.0.0
+2025-06-29 12:41:25,648 - app.main - INFO - Environment: PRODUCTION
+2025-06-29 12:41:26,259 - app.main - INFO - Shutting down AI Symptom Checker
+2025-06-29 12:41:26,823 - app.main - INFO - Starting AI Symptom Checker v1.0.0
+2025-06-29 12:41:26,823 - app.main - INFO - Environment: PRODUCTION
+2025-06-29 12:41:38,447 - app.main - INFO - Request: POST http://localhost:8000/api/v1/analyze
+2025-06-29 12:41:38,449 - app.api.symptoms - INFO - Analyzing symptoms: mild headache and fatigue...
+2025-06-29 12:41:38,450 - app.services.llm_service - INFO - Calling OpenAI API
+2025-06-29 12:41:39,761 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-06-29 12:41:39,763 - app.services.llm_service - WARNING - Attempt 1 failed: OpenAI API error: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}. Retrying in 1.0s...
+2025-06-29 12:41:41,886 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-06-29 12:41:41,887 - app.services.llm_service - WARNING - Attempt 2 failed: OpenAI API error: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}. Retrying in 1.0s...
+2025-06-29 12:41:44,384 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-06-29 12:41:44,385 - app.services.llm_service - ERROR - All 3 attempts failed. Last error: OpenAI API error: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+2025-06-29 12:41:44,385 - app.services.llm_service - ERROR - Error analyzing symptoms: OpenAI API error: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+2025-06-29 12:41:44,385 - app.api.symptoms - ERROR - Unexpected error: OpenAI API error: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+2025-06-29 12:41:44,386 - app.main - INFO - Response: 500 - 5.939s
+2025-06-29 12:41:50,465 - app.main - INFO - Shutting down AI Symptom Checker
+2025-06-29 22:53:46,278 - app.main - INFO - Starting AI Symptom Checker v1.0.0
+2025-06-29 22:53:46,278 - app.main - INFO - Environment: PRODUCTION
+2025-06-29 22:53:58,855 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:53:58,857 - app.main - INFO - Response: 200 - 0.003s
+2025-06-29 22:54:30,298 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:54:30,308 - app.main - INFO - Response: 200 - 0.010s
+2025-06-29 22:55:00,299 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:55:00,302 - app.main - INFO - Response: 200 - 0.003s
+2025-06-29 22:55:08,124 - app.main - INFO - Request: OPTIONS http://localhost:8000/api/v1/analyze
+2025-06-29 22:55:08,125 - app.main - INFO - Response: 200 - 0.001s
+2025-06-29 22:55:08,126 - app.main - INFO - Request: POST http://localhost:8000/api/v1/analyze
+2025-06-29 22:55:08,140 - app.api.symptoms - INFO - Analyzing symptoms: occasional mild headaches, eye strain after screen...
+2025-06-29 22:55:08,144 - app.services.llm_service - INFO - Calling OpenAI API
+2025-06-29 22:55:10,182 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:10,183 - openai._base_client - INFO - Retrying request to /chat/completions in 0.400565 seconds
+2025-06-29 22:55:10,899 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:10,900 - openai._base_client - INFO - Retrying request to /chat/completions in 0.843733 seconds
+2025-06-29 22:55:12,869 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:12,876 - app.services.llm_service - WARNING - Attempt 1 failed: OpenAI rate limit exceeded. Retrying in 1.0s...
+2025-06-29 22:55:14,143 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:14,145 - openai._base_client - INFO - Retrying request to /chat/completions in 0.406599 seconds
+2025-06-29 22:55:15,814 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:15,815 - openai._base_client - INFO - Retrying request to /chat/completions in 0.790134 seconds
+2025-06-29 22:55:17,657 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:17,658 - app.services.llm_service - WARNING - Attempt 2 failed: OpenAI rate limit exceeded. Retrying in 1.0s...
+2025-06-29 22:55:21,139 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:21,140 - openai._base_client - INFO - Retrying request to /chat/completions in 0.466430 seconds
+2025-06-29 22:55:22,778 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:22,779 - openai._base_client - INFO - Retrying request to /chat/completions in 0.789728 seconds
+2025-06-29 22:55:23,846 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-06-29 22:55:23,848 - app.services.llm_service - ERROR - All 3 attempts failed. Last error: OpenAI rate limit exceeded
+2025-06-29 22:55:23,848 - app.services.llm_service - WARNING - OpenAI API failed, using mock response: OpenAI rate limit exceeded
+2025-06-29 22:55:23,850 - app.services.llm_service - INFO - Symptom analysis completed in 15.71s
+2025-06-29 22:55:23,850 - app.services.llm_service - INFO - ANALYSIS_METRICS: {"timestamp": "2025-06-29T17:25:23.850792", "request_id": "36d723a3", "symptoms": "occasional mild headaches, eye strain after screen use, slight fatigue, and mild difficulty concentrating", "age": null, "gender": null, "model_used": "gpt-3.5-turbo", "tokens_used": 2, "processing_time_seconds": 15.71, "conditions_found": 2, "urgency_level": "low", "confidence_score": 0.8, "cache_hit": false, "has_red_flags": false}
+2025-06-29 22:55:23,851 - app.api.symptoms - INFO - Analysis completed successfully
+2025-06-29 22:55:23,855 - app.main - INFO - Response: 200 - 15.728s
+2025-06-29 22:55:30,298 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:55:30,299 - app.main - INFO - Response: 200 - 0.002s
+2025-06-29 22:56:01,229 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:56:01,234 - app.main - INFO - Response: 200 - 0.006s
+2025-06-29 22:56:31,198 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:56:31,201 - app.main - INFO - Response: 200 - 0.004s
+2025-06-29 22:57:01,197 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:57:01,200 - app.main - INFO - Response: 200 - 0.003s
+2025-06-29 22:57:31,194 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:57:31,196 - app.main - INFO - Response: 200 - 0.002s
+2025-06-29 22:58:27,245 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:58:27,256 - app.main - INFO - Response: 200 - 0.011s
+2025-06-29 22:59:27,202 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 22:59:27,204 - app.main - INFO - Response: 200 - 0.002s
+2025-06-29 23:00:27,219 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:00:27,223 - app.main - INFO - Response: 200 - 0.005s
+2025-06-29 23:01:27,268 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:01:27,275 - app.main - INFO - Response: 200 - 0.008s
+2025-06-29 23:02:27,220 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:02:27,223 - app.main - INFO - Response: 200 - 0.003s
+2025-06-29 23:03:27,216 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:03:27,218 - app.main - INFO - Response: 200 - 0.002s
+2025-06-29 23:04:27,237 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:04:27,249 - app.main - INFO - Response: 200 - 0.013s
+2025-06-29 23:05:27,227 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:05:27,231 - app.main - INFO - Response: 200 - 0.004s
+2025-06-29 23:06:27,225 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:06:27,229 - app.main - INFO - Response: 200 - 0.003s
+2025-06-29 23:07:22,764 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:07:22,767 - app.main - INFO - Response: 200 - 0.002s
+2025-06-29 23:07:31,251 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:07:31,255 - app.main - INFO - Response: 200 - 0.004s
+2025-06-29 23:08:01,199 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:08:01,204 - app.main - INFO - Response: 200 - 0.005s
+2025-06-29 23:09:21,200 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:09:21,204 - app.main - INFO - Response: 200 - 0.004s
+2025-06-29 23:10:22,200 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:10:22,203 - app.main - INFO - Response: 200 - 0.003s
+2025-06-29 23:11:23,199 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:11:23,203 - app.main - INFO - Response: 200 - 0.005s
+2025-06-29 23:12:24,195 - app.main - INFO - Request: GET http://localhost:8000/api/v1/health
+2025-06-29 23:12:24,201 - app.main - INFO - Response: 200 - 0.006s
