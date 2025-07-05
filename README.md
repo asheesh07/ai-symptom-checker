@@ -208,35 +208,6 @@ curl -X GET "http://localhost:8000/api/v1/admin/metrics?days=7&api_key=your_admi
 
 **IMPORTANT**: This system is for educational and informational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for proper medical care.
 
-## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
 
-## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-For support or questions:
-
-- Check the API documentation at `http://localhost:8000/docs`
-- Review the admin dashboard at `frontend/admin.html`
-- Check the application logs for detailed error information
-
-## 🔄 Recent Updates
-
-### v1.0.0 - Advanced Features Release
-
-- ✅ Advanced prompting with multiple condition analysis
-- ✅ Explainability features with reasoning for each condition
-- ✅ Role-based admin panel with analytics
-- ✅ Enhanced chat-style UI with real-time interaction
-- ✅ Comprehensive metrics logging and analytics
-- ✅ Red flag detection and emergency symptom handling
-- ✅ Mobile-responsive design with conditional coloring
-- ✅ Redis-based caching and performance optimization
